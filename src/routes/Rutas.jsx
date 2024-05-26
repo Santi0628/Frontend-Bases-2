@@ -4,7 +4,9 @@ import { Home } from "../components/Home";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { CrearExamen } from "../components/CrearExamen"
-import Ingreso from "../components/Ingreso";
+import IngresoProfesor from "../components/IngresoProfesor";
+import IngresoEstudiante from "../components/IngresoEstudiante";
+import LoginChoice from "../components/LoginChoise";
 
 export const Rutas = () => {
     return (
@@ -14,9 +16,10 @@ export const Rutas = () => {
 
             {/* CONTENIDO CENTRAL Y RUTAS */}
                 <Routes>
-                    <Route path="/" element={<Ingreso />}/>
-                    <Route path="/ingreso" element={<Ingreso />}/>
-                    <Route path="/home_profesor" element={<Home/>}/>
+                    <Route path="/" element={<LoginChoice />}/>
+                    <Route path="/profesor" element={<IngresoProfesor />}/>
+                    <Route path="/estudiante" element={<IngresoEstudiante />}/>
+                    <Route path="/home_profesor/:id" element={<Home/>}/>
                     <Route path="/home_profesor/crear_examen" element={<CrearExamen/>}/>
                 </Routes>
 
