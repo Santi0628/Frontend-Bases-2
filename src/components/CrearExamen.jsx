@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import '../components/CrearExamen.css'; // Archivo de estilos CSS para el componente
 import { ProfessorContext } from './context/ProfessorProvider';
+import Swal from "sweetalert2";
 
 export const CrearExamen = () => {
   const { professorId, professorGrupo } = useContext(ProfessorContext);
@@ -13,6 +14,7 @@ export const CrearExamen = () => {
   const [porcentajeCurso, setPorcentajeCurso] = useState(0);
   const [umbralAprobado, setUmbralAprovado] = useState(0);
   const [estadoPublicacion, setEstadoPublicacion] = useState('');
+  const [automatico, setautomatico] = useState('');
   const [idContenido, setIdContenido] = useState(0);
   const [contenidos, setContenidos] = useState([]); // Estado para almacenar los contenidos
   const id_profesor = professorId;
@@ -33,7 +35,8 @@ export const CrearExamen = () => {
       estadoPublicacion: String(estadoPublicacion),
       idContenido: String(idContenido),
       id_profesor: String(id_profesor),
-      profesorGrupo: String(profesorGrupo)
+      profesorGrupo: String(profesorGrupo),
+      automatico: "true"
     };
 
     console.log(data);
@@ -47,7 +50,35 @@ export const CrearExamen = () => {
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) {
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: "Examen Creado",
+          text: "El examen ha sido creado con éxito.",
+          showConfirmButton: false,
+          timer: 3000
+      });
+
+      setNombre('');
+      setDescripcion('');
+      setTipoExamen('');
+      setTiempoLimite(0);
+      setCantidadPreguntas(0);
+      setCantidadAlumno(0);
+      setPorcentajeCurso(0);
+      setUmbralAprovado(0);
+      setEstadoPublicacion('');
+      setautomatico('');
+      setIdContenido(0);
+        
+      }else{
+        Swal.fire({
+          icon: 'error',
+          title: "Error creando el examen",
+          text: "Ha habido un error creando el examen.",
+          showConfirmButton: false,
+          timer: 3000
+      });
         throw new Error('Error en la solicitud: ' + response.statusText);
       }
 
