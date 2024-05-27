@@ -1,5 +1,22 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { ProfessorContext } from './context/ProfessorProvider';
+import { StudentContext } from './context/StudentProvider';
+
 export const Header = () => {
+    const { professorName, professorId, clearProfessorName } = useContext(ProfessorContext);
+    const { studentName, studentId } = useContext(StudentContext);
+    let nombre = '';
+    if (studentName !== undefined) {
+        nombre =studentName
+    }else{
+        nombre = professorName;
+    }
+
+    const handleLogout = () => {
+        clearProfessorName();
+    };
+
     return (
         <div style={{
             background: '#ffffff',
@@ -30,7 +47,7 @@ export const Header = () => {
                     borderTop: '6px solid transparent',
                     borderBottom: '6px solid transparent'
                 }}></div>
-                <h1 style={{marginLeft: '15px', marginTop: '30px'}}>UQ Examenes</h1>
+                <h1 style={{ marginLeft: '15px', marginTop: '30px' }}>UQ Examenes</h1>
             </header>
             <nav style={{
                 gridArea: 'nav',
@@ -42,46 +59,48 @@ export const Header = () => {
                     alignItems: 'center',
                     listStyle: 'none'
                 }}>
-                    <li style={{padding: '10px'}}><a href="#" style={{
-                        display: 'block',
-                        marginLeft: '30px',
-                        marginRight: '30px',
-                        fontSize: '18px',
-                        fontWeight: 'lighter',
-                        color: 'white',
-                        textDecoration: 'none',
-                        transition: 'all 300ms'
-                    }}>Nombre profesor</a></li>
-                    <li style={{padding: '10px'}}><a href="#" style={{
-                        display: 'block',
-                        marginLeft: '30px',
-                        marginRight: '30px',
-                        fontSize: '18px',
-                        fontWeight: 'lighter',
-                        color: 'white',
-                        textDecoration: 'none',
-                        transition: 'all 300ms'
-                    }}>Examenes</a></li>
-                    <li style={{padding: '10px'}}><a href="#" style={{
-                        display: 'block',
-                        marginLeft: '30px',
-                        marginRight: '30px',
-                        fontSize: '18px',
-                        fontWeight: 'lighter',
-                        color: 'white',
-                        textDecoration: 'none',
-                        transition: 'all 300ms'
-                    }}>Ingresar</a></li>
-                    <li style={{padding: '10px'}}><a href="#" style={{
-                        display: 'block',
-                        marginLeft: '30px',
-                        marginRight: '30px',
-                        fontSize: '18px',
-                        fontWeight: 'lighter',
-                        color: 'white',
-                        textDecoration: 'none',
-                        transition: 'all 300ms'
-                    }}>Salir</a></li>
+                    <li style={{ padding: '10px' }}>
+                        <Link to={professorId ? `/home_profesor/${professorId}` : `/home_estudiante/${studentId}`} style={{
+                            display: 'block',
+                            marginLeft: '30px',
+                            marginRight: '30px',
+                            fontSize: '18px',
+                            fontWeight: 'lighter',
+                            color: 'white',
+                            textDecoration: 'none',
+                            transition: 'all 300ms'
+                        }}>
+                            Hola <b>{nombre ? nombre : 'identifiquese '}</b>
+                        </Link>
+                    </li>
+                    <li style={{ padding: '10px' }}>
+                    <Link to={`/listarExamenes/`} style={{
+                            display: 'block',
+                            marginLeft: '30px',
+                            marginRight: '30px',
+                            fontSize: '18px',
+                            fontWeight: 'lighter',
+                            color: 'white',
+                            textDecoration: 'none',
+                            transition: 'all 300ms'
+                        }}>
+                            Examenes
+                        </Link>
+                    </li>
+                    <li style={{ padding: '10px' }}>
+                        <Link to="/" onClick={handleLogout} style={{
+                            display: 'block',
+                            marginLeft: '30px',
+                            marginRight: '30px',
+                            fontSize: '18px',
+                            fontWeight: 'lighter',
+                            color: 'white',
+                            textDecoration: 'none',
+                            transition: 'all 300ms'
+                        }}>
+                            Salir
+                        </Link>
+                    </li>
                 </ul>
             </nav>
         </div>

@@ -7,24 +7,33 @@ import { CrearExamen } from "../components/CrearExamen"
 import IngresoProfesor from "../components/IngresoProfesor";
 import IngresoEstudiante from "../components/IngresoEstudiante";
 import LoginChoice from "../components/LoginChoise";
+import { Home2 } from "../components/Home2";
+import { ProfessorProvider } from "../components/context/ProfessorProvider";
+import ListarExamenes from "../components/ListarExamenes";
+import { ResponderExamen } from "../components/ResponderExamen";
+import { StudentProvider } from "../components/context/StudentProvider";
 
 export const Rutas = () => {
     return (
-        <BrowserRouter>
-            {/* LAYOUT */}
-            <Header />
-
-            {/* CONTENIDO CENTRAL Y RUTAS */}
-                <Routes>
-                    <Route path="/" element={<LoginChoice />}/>
-                    <Route path="/profesor" element={<IngresoProfesor />}/>
-                    <Route path="/estudiante" element={<IngresoEstudiante />}/>
-                    <Route path="/home_profesor/:id" element={<Home/>}/>
-                    <Route path="/home_profesor/crear_examen" element={<CrearExamen/>}/>
-                </Routes>
-
-            <Footer />
-
-        </BrowserRouter>
+        <StudentProvider>
+            <ProfessorProvider>
+                <BrowserRouter>
+                    {/* LAYOUT */}
+                    <Header />
+                    {/* CONTENIDO CENTRAL Y RUTAS */}
+                    <Routes>
+                        <Route path="/" element={<LoginChoice />} />
+                        <Route path="/profesor" element={<IngresoProfesor />} />
+                        <Route path="/estudiante" element={<IngresoEstudiante />} />
+                        <Route path="/home_profesor/:id" element={<Home />} />
+                        <Route path="/home_estudiante/:id" element={<Home2 />} />
+                        <Route path="/crear_examen" element={<CrearExamen />} />
+                        <Route path="/responder_examen" element={<ResponderExamen />} />
+                        <Route path="/listarExamenes" element={<ListarExamenes />} />
+                    </Routes>
+                    <Footer />
+                </BrowserRouter>
+            </ProfessorProvider>
+        </StudentProvider>
     );
 }

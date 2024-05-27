@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
 import { Link, useParams } from "react-router-dom"
+import { ProfessorContext } from './context/ProfessorProvider';
 
 export const Home = () => {
 
   let { id } = useParams();
   const [grupos, setGrupos] = useState([]);
+  const { setProfessorName, setProfessorId, setProfessorGrupo } = useContext(ProfessorContext);
 
   useEffect(() => {
     const fetchGrupos = async () => {
@@ -20,6 +22,14 @@ export const Home = () => {
         if (response.ok) {
           const data = await response.json();
           setGrupos(data);
+
+          if (data.length > 0 && data[0].profesoresUsuariosIdUsuario) {
+            setProfessorName(data[0].profesoresUsuariosIdUsuario.nombre);
+            setProfessorGrupo(data[0].id);
+            setProfessorId(data[0].profesoresUsuariosIdUsuario.usuarios.idUsuario);
+            console.log(data[0].id);
+            console.log(data[0].profesoresUsuariosIdUsuario.usuarios.idUsuario);
+          }
         } else {
           console.error('Error al obtener los grupos:', response.statusText);
         }
@@ -29,7 +39,7 @@ export const Home = () => {
     };
 
     fetchGrupos();
-  }, [id]);
+  }, [id, setProfessorName, setProfessorGrupo, setProfessorId]);
 
   console.log(grupos);
 

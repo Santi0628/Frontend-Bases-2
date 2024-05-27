@@ -1,31 +1,80 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import '../components/CrearExamen.css'; // Archivo de estilos CSS para el componente
+import { ProfessorContext } from './context/ProfessorProvider';
 
 export const CrearExamen = () => {
+  const { professorId, professorGrupo } = useContext(ProfessorContext);
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [categoria, setCategoria] = useState('');
+  const [tipoExamen, setTipoExamen] = useState('');
+  const [tiempoLimite, setTiempoLimite] = useState(0);
   const [cantidadPreguntas, setCantidadPreguntas] = useState(0);
   const [cantidadAlumno, setCantidadAlumno] = useState(0);
-  const [tiempoLimite, setTiempoLimite] = useState('');
-  const [programado, setProgramado] = useState(false);
-  const [fecha, setFecha] = useState('');
-  const [hora, setHora] = useState('');
+  const [porcentajeCurso, setPorcentajeCurso] = useState(0);
+  const [umbralAprobado, setUmbralAprovado] = useState(0);
+  const [estadoPublicacion, setEstadoPublicacion] = useState('');
+  const [idContenido, setIdContenido] = useState(0);
+  const [contenidos, setContenidos] = useState([]); // Estado para almacenar los contenidos
+  const id_profesor = professorId;
+  const profesorGrupo = professorGrupo;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
-      nombre,
-      descripcion,
-      categoria,
-      cantidadPreguntas,
-      cantidadAlumno,
-      tiempoLimite,
-      programado,
-      fecha,
-      hora
-    });
+
+    const data = {
+      nombre: String(nombre),
+      descripcion: String(descripcion),
+      cantidadPreguntas: String(cantidadPreguntas),
+      cantidadAlumno: String(cantidadAlumno),
+      tiempoLimite: String(tiempoLimite),
+      tipoExamen: String(tipoExamen),
+      porcentajeCurso: String(porcentajeCurso),
+      umbralAprobado: String(umbralAprobado),
+      estadoPublicacion: String(estadoPublicacion),
+      idContenido: String(idContenido),
+      id_profesor: String(id_profesor),
+      profesorGrupo: String(profesorGrupo)
+    };
+
+    console.log(data);
+
+    try {
+      const response = await fetch('http://localhost:9009/examenes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en la solicitud: ' + response.statusText);
+      }
+
+      const result = await response.json();
+      console.log('Examen enviado con éxito:', result);
+    } catch (error) {
+      console.error('Error al enviar el examen:', error);
+    }
   };
+
+  useEffect(() => {
+    // Realiza la solicitud fetch a la URL proporcionada
+    const fetchContenidos = async () => {
+      try {
+        const response = await fetch('http://localhost:9009/contenidos/listarContenidos');
+        const data = await response.json();
+        setContenidos(data);
+        console.log(data);
+        console.log(profesorGrupo)
+        console.log(professorId)
+      } catch (error) {
+        console.error('Error fetching contenidos:', error);
+      }
+    };
+
+    fetchContenidos();
+  }, []);
 
   return (
     <div className="contenido">
@@ -37,38 +86,39 @@ export const CrearExamen = () => {
         <label htmlFor="descripcion">Descripción:</label>
         <textarea id="descripcion" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} required />
 
-        <label htmlFor="categoria">Categoría:</label>
-        <select id="categoria" value={categoria} onChange={(e) => setCategoria(e.target.value)} required>
-          <option value="">Seleccione una categoría</option>
-          <option value="Facultad de Ingeniería">Facultad de Ingeniería</option>
-          <option value="Programa de Ingeniería de Sistemas y Computación">Programa de Ingeniería de Sistemas y Computación</option>
-          <option value="Curso: Bases de Datos II">Curso: Bases de Datos II</option>
-          <option value="Proyecto Final 2024-1">Proyecto Final 2024-1</option>
-        </select>
-
-        <label htmlFor="cantidadPreguntas">Cantidad de preguntas en el banco:</label>
+        <label htmlFor="cantidadPreguntas">Cantidad de preguntas:</label>
         <input type="number" id="cantidadPreguntas" value={cantidadPreguntas} onChange={(e) => setCantidadPreguntas(e.target.value)} required />
 
-        <label htmlFor="cantidadAlumno">Cantidad de preguntas para el alumno:</label>
-        <input type="number" id="cantidadAlumno" value={cantidadAlumno} onChange={(e) => setCantidadAlumno(e.target.value)} required />
+        <label htmlFor="cantidadPreguntasEstudiante">Cantidad de preguntas estudiante:</label>
+        <input type="number" id="cantidadPreguntasEstudiante" value={cantidadAlumno} onChange={(e) => setCantidadAlumno(e.target.value)} required />
 
         <label htmlFor="tiempoLimite">Tiempo límite (en minutos):</label>
         <input type="number" id="tiempoLimite" value={tiempoLimite} onChange={(e) => setTiempoLimite(e.target.value)} required />
 
-        <label>
-          <input type="checkbox" checked={programado} onChange={(e) => setProgramado(e.target.checked)} />
-          Programado
-        </label>
+        <label htmlFor="tipoExamen">Tipo de examen:</label>
+        <textarea id="tipoExamen" value={tipoExamen} onChange={(e) => setTipoExamen(e.target.value)} required />
 
-        {programado && (
-          <>
-            <label htmlFor="fecha">Fecha:</label>
-            <input type="date" id="fecha" value={fecha} onChange={(e) => setFecha(e.target.value)} required />
+        <label htmlFor="porcentajeCurso">Porcentaje del curso:</label>
+        <input type="number" id="porcentajeCurso" value={porcentajeCurso} onChange={(e) => setPorcentajeCurso(e.target.value)} required />
 
-            <label htmlFor="hora">Hora:</label>
-            <input type="time" id="hora" value={hora} onChange={(e) => setHora(e.target.value)} required />
-          </>
-        )}
+        <label htmlFor="porcentajeAprobado">Umbral para aprobar:</label>
+        <input type="number" id="porcentajeAprobado" value={umbralAprobado} onChange={(e) => setUmbralAprovado(e.target.value)} required />
+
+        <label htmlFor="estadoPublicacion">Estado de publicacion:</label>
+        <select id="estadoPublicacion" value={estadoPublicacion} onChange={(e) => setEstadoPublicacion(e.target.value)} required>
+          <option value="">Seleccione un estado</option>
+          <option value="Borrador">Borrador</option>
+          <option value="En curso">En curso</option>
+          <option value="Listo">Listo</option>
+        </select>
+
+        <label htmlFor="idContenido">Contenido:</label>
+        <select id="idContenido" value={idContenido} onChange={(e) => setIdContenido(Number(e.target.value))} required>
+          <option value="">Seleccione un contenido</option>
+          {contenidos.map(contenido => (
+            <option key={contenido.id} value={contenido.id}>{contenido.nombre}</option>
+          ))}
+        </select>
 
         <button type="submit" className='button'>Crear Examen</button>
       </form>
