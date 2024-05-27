@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { StudentContext } from './context/StudentProvider'; // Asegúrate de que la ruta es correcta
 
 const IngresoEstudiante = () => {
   const [id, setId] = useState('');
-  const [userData, setUserData] = useState(null);
   const [showModal, setShowModal] = useState(false); // Estado para mostrar/ocultar modal
   const [userType, setUserType] = useState(null); // Estado para guardar el tipo de usuario
+  const { setStudentName, setStudentId } = useContext(StudentContext);
+  const navigate = useNavigate(); // Utiliza useNavigate para la redirección
 
   const handleInputChange = (event) => {
     setId(event.target.value);
@@ -22,21 +24,20 @@ const IngresoEstudiante = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setUserData({
-          id: data.usuariosIdUsuario,
-        });
         setUserType(data.usuarios.idTipoUsuario.id);
-        console.log(data.usuarios.idTipoUsuario.id);
 
         if (data.usuarios.idTipoUsuario.id === 1) {
-          setShowModal(true);
-          console.log(data.usuarios.idTipoUsuario)
+          setStudentName(data.nombre); // Setea el nombre del estudiante en el contexto
+          setStudentId(data.usuariosIdUsuario); // Setea el ID del estudiante en el contexto
+          navigate(`/home_estudiante/${data.usuariosIdUsuario}`); // Redirige al usuario
+        } else {
+          setShowModal(true); // Mostrar modal si el usuario no es un estudiante
         }
       } else {
         setShowModal(true); // Mostrar modal si no se encuentra el usuario
       }
     } catch (error) {
-      setShowModal(true); // Mostrar modal si no se encuentra el usuario
+      setShowModal(true); // Mostrar modal si hay un error en la solicitud
       console.error('Error:', error);
     }
   };
@@ -64,36 +65,20 @@ const IngresoEstudiante = () => {
         }}
       />
 
-      {userData ? (
-        <Link
-          to={`/home_estudiante/${userData.id}`} // Concatena el ID del usuario en la URL
-          style={{
-            backgroundColor: '#28a745',
-            color: 'white',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            textDecoration: 'none'
-          }}
-        >
-          INGRESAR
-        </Link>
-      ) : (
-        <button
-          onClick={handleSubmit}
-          style={{
-            backgroundColor: '#28a745',
-            color: 'white',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          INGRESAR
-        </button>
-      )}
+      <button
+        onClick={handleSubmit}
+        style={{
+          backgroundColor: '#28a745',
+          color: 'white',
+          padding: '10px 20px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}
+      >
+        INGRESAR
+      </button>
+
       {showModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '5px' }}>

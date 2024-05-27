@@ -8,13 +8,15 @@ export const StudentProvider = ({ children }) => {
   const [studentId, setStudentId] = useState('');
   const [studentGroup, setStudentGroup] = useState([]);
 
-  const clearStudentName = () => {
+  const clearStudentData = () => {
     setStudentName('');
+    setStudentId('');
+    setStudentGroup([]);
   };
 
   return (
     <StudentContext.Provider value={{ studentName, setStudentName, 
-        studentId, setStudentId, studentGroup, setStudentGroup, clearStudentName }}>
+        studentId, setStudentId, studentGroup, setStudentGroup, clearStudentData }}>
       {children}
     </StudentContext.Provider>
   );

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { ProfessorContext } from './context/ProfessorProvider';
 
 const IngresoProfesor = () => {
   const [id, setId] = useState('');
-  const [userData, setUserData] = useState(null);
   const [showModal, setShowModal] = useState(false); // Estado para mostrar/ocultar modal
   const [userType, setUserType] = useState(null); // Estado para guardar el tipo de usuario
+  const { setProfessorName, setProfessorId } = useContext(ProfessorContext);
+  const navigate = useNavigate(); // Utiliza useNavigate para la redirección
 
   const handleInputChange = (event) => {
     setId(event.target.value);
@@ -22,22 +24,20 @@ const IngresoProfesor = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setUserData({
-          id: data.usuariosIdUsuario,
-          nombre: data.nombre,
-          apellido: data.apellido,
-        });
         setUserType(data.usuarios.idTipoUsuario.id);
 
         if (data.usuarios.idTipoUsuario.id === 2) {
-          setShowModal(true);
-          console.log(data.usuarios.idTipoUsuario)
+          setProfessorName(data.nombre); // Setea el nombre del profesor en el contexto
+          setProfessorId(data.usuariosIdUsuario); // Setea el ID del profesor en el contexto
+          navigate(`/home_profesor/${data.usuariosIdUsuario}`); // Redirige al usuario
+        } else {
+          setShowModal(true); // Mostrar modal si el usuario no es un profesor
         }
       } else {
         setShowModal(true); // Mostrar modal si no se encuentra el usuario
       }
     } catch (error) {
-      setShowModal(true); // Mostrar modal si no se encuentra el usuario
+      setShowModal(true); // Mostrar modal si hay un error en la solicitud
       console.error('Error:', error);
     }
   };
@@ -65,36 +65,20 @@ const IngresoProfesor = () => {
         }}
       />
 
-      {userData ? (
-        <Link
-          to={`/home_profesor/${userData.id}`} // Concatena el ID del usuario en la URL
-          style={{
-            backgroundColor: '#28a745',
-            color: 'white',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            textDecoration: 'none'
-          }}
-        >
-          INGRESAR
-        </Link>
-      ) : (
-        <button
-          onClick={handleSubmit}
-          style={{
-            backgroundColor: '#28a745',
-            color: 'white',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          INGRESAR
-        </button>
-      )}
+      <button
+        onClick={handleSubmit}
+        style={{
+          backgroundColor: '#28a745',
+          color: 'white',
+          padding: '10px 20px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}
+      >
+        INGRESAR
+      </button>
+
       {showModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '5px' }}>

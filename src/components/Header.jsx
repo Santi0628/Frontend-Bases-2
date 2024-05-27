@@ -1,20 +1,25 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProfessorContext } from './context/ProfessorProvider';
 import { StudentContext } from './context/StudentProvider';
 
 export const Header = () => {
-    const { professorName, professorId, clearProfessorName } = useContext(ProfessorContext);
-    const { studentName, studentId } = useContext(StudentContext);
-    let nombre = '';
-    if (studentName !== undefined) {
-        nombre =studentName
-    }else{
-        nombre = professorName;
-    }
+    const { professorName, professorId, clearProfessorData  } = useContext(ProfessorContext);
+    const { studentName, studentId, clearStudentData } = useContext(StudentContext);
+    const [nombre, setNombre] = useState('');
+
+    useEffect(() => {
+        if (studentName) {
+            setNombre(studentName);
+        } else if (professorName) {
+            setNombre(professorName);
+        }
+    }, [studentName, professorName]);
 
     const handleLogout = () => {
-        clearProfessorName();
+        clearProfessorData();
+        clearStudentData();
+        setNombre('');
     };
 
     return (

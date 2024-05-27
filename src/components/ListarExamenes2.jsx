@@ -100,7 +100,7 @@ const BackButton = styled.button`
 `;
 
 const ListarExamenes2 = () => {
-  const { studentGroup } = useContext(StudentContext);
+  const { studentGroup, studentId } = useContext(StudentContext);
   const [exams, setExams] = useState([]);
 
   useEffect(() => {
@@ -158,7 +158,7 @@ const ListarExamenes2 = () => {
             ))}
           </tbody>
         </Table>
-        <Link to="/" style={{
+        <Link to={`/home_estudiante/${studentId}`} style={{
           color: "white",
           textAlign: "center",
           textDecoration: "none",

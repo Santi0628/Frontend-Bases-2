@@ -8,13 +8,15 @@ export const ProfessorProvider = ({ children }) => {
   const [professorId, setProfessorId] = useState('');
   const [professorGrupo, setProfessorGrupo] = useState('');
 
-  const clearProfessorName = () => {
+  const clearProfessorData = () => {
     setProfessorName('');
+    setProfessorGrupo('');
+    setProfessorId('');
   };
 
   return (
     <ProfessorContext.Provider value={{ professorName, setProfessorName, 
-    professorId, setProfessorId, professorGrupo, setProfessorGrupo, clearProfessorName }}>
+    professorId, setProfessorId, professorGrupo, setProfessorGrupo, clearProfessorData }}>
       {children}
     </ProfessorContext.Provider>
   );

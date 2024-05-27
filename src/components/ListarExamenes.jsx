@@ -145,7 +145,7 @@ const ListarExamenes = () => {
             ))}
           </tbody>
         </Table>
-        <Link to="/" style={{
+        <Link to={`/home_profesor/${id}`} style={{
           color: "white",
           textAlign: "center",
           textDecoration: "none",
