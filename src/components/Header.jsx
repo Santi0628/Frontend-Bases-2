@@ -74,7 +74,7 @@ export const Header = () => {
                         </Link>
                     </li>
                     <li style={{ padding: '10px' }}>
-                    <Link to={`/listarExamenes/`} style={{
+                    <Link to={professorId ? `/listarExamenes/${professorId}` : `/listarExamenesEstudiante/${studentId}`} style={{
                             display: 'block',
                             marginLeft: '30px',
                             marginRight: '30px',

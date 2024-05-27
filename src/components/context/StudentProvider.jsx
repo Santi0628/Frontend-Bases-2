@@ -6,6 +6,7 @@ export const StudentContext = createContext();
 export const StudentProvider = ({ children }) => {
   const [studentName, setStudentName] = useState('');
   const [studentId, setStudentId] = useState('');
+  const [studentGroup, setStudentGroup] = useState([]);
 
   const clearStudentName = () => {
     setStudentName('');
@@ -13,7 +14,7 @@ export const StudentProvider = ({ children }) => {
 
   return (
     <StudentContext.Provider value={{ studentName, setStudentName, 
-        studentId, setStudentId, clearStudentName }}>
+        studentId, setStudentId, studentGroup, setStudentGroup, clearStudentName }}>
       {children}
     </StudentContext.Provider>
   );

@@ -1,18 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom";
 import { StudentContext } from './context/StudentProvider';
 
 export const Home2 = () => {
-
   let { id } = useParams();
   const [grupos, setGrupos] = useState([]);
-  const { setStudentName, setStudentId } = useContext(StudentContext);
+  const { setStudentName, setStudentId, setStudentGroup } = useContext(StudentContext);
 
   useEffect(() => {
     const fetchGrupos = async () => {
       try {
-        const response = await fetch(`http://localhost:9009/usuarios/listarGruposPorEstudiante/${id}`,{
+        const response = await fetch(`http://localhost:9009/usuarios/listarGruposPorEstudiante/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -27,8 +26,11 @@ export const Home2 = () => {
           if (data.length > 0) {
             setStudentName(data[0].idEstudiante.nombre);
             setStudentId(data[0].id.idEstudiante);
+            const groupIds = data.map(grupo => grupo.id.idGrupo);
+            setStudentGroup(groupIds);
             console.log(data[0].idEstudiante.nombre);
             console.log(data[0].id.idEstudiante);
+            console.log(groupIds);
           }
         } else {
           console.error('Error al obtener los grupos:', response.statusText);
@@ -39,7 +41,7 @@ export const Home2 = () => {
     };
 
     fetchGrupos();
-  }, [id, setStudentName, setStudentId]);
+  }, [id, setStudentName, setStudentId, setStudentGroup]);
 
   console.log(grupos);
 
@@ -59,5 +61,5 @@ export const Home2 = () => {
         </div>
       </main>
     </div>
-  )
-} 
+  );
+};

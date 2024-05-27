@@ -12,6 +12,7 @@ import { ProfessorProvider } from "../components/context/ProfessorProvider";
 import ListarExamenes from "../components/ListarExamenes";
 import { ResponderExamen } from "../components/ResponderExamen";
 import { StudentProvider } from "../components/context/StudentProvider";
+import ListarExamenes2 from "../components/ListarExamenes2";
 
 export const Rutas = () => {
     return (
@@ -29,7 +30,8 @@ export const Rutas = () => {
                         <Route path="/home_estudiante/:id" element={<Home2 />} />
                         <Route path="/crear_examen" element={<CrearExamen />} />
                         <Route path="/responder_examen" element={<ResponderExamen />} />
-                        <Route path="/listarExamenes" element={<ListarExamenes />} />
+                        <Route path="/listarExamenes/:id" element={<ListarExamenes />} />
+                        <Route path="/listarExamenesEstudiante/:id" element={<ListarExamenes2 />} />
                     </Routes>
                     <Footer />
                 </BrowserRouter>

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ProfessorContext } from './context/ProfessorProvider';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { StudentContext } from './context/StudentProvider';
 
 const Container = styled.div`
   width: 600px;
@@ -99,17 +99,30 @@ const BackButton = styled.button`
   }
 `;
 
-const ListarExamenes = () => {
-  const { professorId } = useContext(ProfessorContext);
+const ListarExamenes2 = () => {
+  const { studentGroup } = useContext(StudentContext);
   const [exams, setExams] = useState([]);
-  let { id } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:9009/examenes/buscarExamenesPorProfesor/${id}`)
-      .then(response => response.json())
-      .then(data => setExams(data))
-      .catch(error => console.error('Error fetching exams:', error));
-  }, [professorId]);
+    const fetchExams = async () => {
+      try {
+        const examPromises = studentGroup.map(groupId => 
+          fetch(`http://localhost:9009/examenes/listarExamenesPorGrupo/${groupId}`)
+            .then(response => response.json())
+        );
+        const examsArray = await Promise.all(examPromises);
+        const allExams = examsArray.flat(); // Combina los arrays de exámenes
+        setExams(allExams);
+      } catch (error) {
+        console.error('Error fetching exams:', error);
+      }
+    };
+
+    if (studentGroup.length > 0) {
+      fetchExams();
+      console.log(exams);
+    }
+  }, [studentGroup]);
 
   return (
     <Container>
@@ -163,4 +176,4 @@ const ListarExamenes = () => {
   );
 };
 
-export default ListarExamenes;
+export default ListarExamenes2;
