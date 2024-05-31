@@ -39,7 +39,8 @@ input[type="checkbox"] {
 
 .button {
   padding: 10px 20px;
-  background-color: #248f03;
+  background-color: #66c285
+  ;
   color: white;
   border: none;
   border-radius: 5px;
@@ -48,5 +49,5 @@ input[type="checkbox"] {
 }
 
 .button:hover {
-  background-color: #0ee443;
+  background-color: #218838;
 }
