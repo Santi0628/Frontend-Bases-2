@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 
 const Container = styled.div`
   width: 600px;
+  height: 400px;
   margin: 0 auto;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -113,7 +114,7 @@ const ListarExamenes = () => {
 
   return (
     <Container>
-      <Title>Estructura Diurno 01</Title>
+      <Title>LISTA DE EXÁMENES</Title>
       <ExamHistory>
         <h3>Historial De Exámenes</h3>
         <Table>

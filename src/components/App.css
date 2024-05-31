@@ -63,11 +63,28 @@
   }
   
   .ver-button {
-    background-color: #61dafb;
+    background-color: #2a7c34;
     border: none;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
   }
-  
+
+  .arroz {
+    background-color: #2a7c34;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+  }
+  .arroz:hover {
+    color: rgba(255, 255, 255, 1) !important;
+    box-shadow: 0 4px 16px rgba(49, 138, 172, 1);
+    transition: all 0.2s ease;
+  }

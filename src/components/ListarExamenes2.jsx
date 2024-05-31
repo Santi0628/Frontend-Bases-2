@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { StudentContext } from './context/StudentProvider';
+import { ProfessorContext } from './context/ProfessorProvider';
+import { Link, useParams } from 'react-router-dom';
 
 const Container = styled.div`
   width: 600px;
+  height: 400px;
   margin: 0 auto;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -16,7 +17,7 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   padding: 16px;
-  background-color: #4CAF50;
+  background-color: #2a7c34; /* Nuevo tono de verde */
   color: white;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -71,7 +72,7 @@ const TableCell = styled.td`
 `;
 
 const ActionButton = styled.button`
-  background-color: #4CAF50;
+  background-color: #2a7c34; /* Nuevo tono de verde */
   color: white;
   border: none;
   padding: 8px 12px;
@@ -80,12 +81,12 @@ const ActionButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #45a049;
+    background-color: #1e5a23; /* Nuevo tono de verde oscuro */
   }
 `;
 
 const BackButton = styled.button`
-  background-color: #00796b;
+  background-color: #004d40; /* Nuevo tono de verde */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -95,34 +96,21 @@ const BackButton = styled.button`
   margin: 0 auto 16px;
 
   &:hover {
-    background-color: #004d40;
+    background-color: #00332b; /* Nuevo tono de verde oscuro */
   }
 `;
 
-const ListarExamenes2 = () => {
-  const { studentGroup, studentId } = useContext(StudentContext);
+const ListarExamenes = () => {
+  const { professorId } = useContext(ProfessorContext);
   const [exams, setExams] = useState([]);
+  let { id } = useParams();
 
   useEffect(() => {
-    const fetchExams = async () => {
-      try {
-        const examPromises = studentGroup.map(groupId => 
-          fetch(`http://localhost:9009/examenes/listarExamenesPorGrupo/${groupId}`)
-            .then(response => response.json())
-        );
-        const examsArray = await Promise.all(examPromises);
-        const allExams = examsArray.flat(); // Combina los arrays de exámenes
-        setExams(allExams);
-      } catch (error) {
-        console.error('Error fetching exams:', error);
-      }
-    };
-
-    if (studentGroup.length > 0) {
-      fetchExams();
-      console.log(exams);
-    }
-  }, [studentGroup]);
+    fetch(`http://localhost:9009/examenes/buscarExamenesPorProfesor/${id}`)
+      .then(response => response.json())
+      .then(data => setExams(data))
+      .catch(error => console.error('Error fetching exams:', error));
+  }, [professorId]);
 
   return (
     <Container>
@@ -158,7 +146,7 @@ const ListarExamenes2 = () => {
             ))}
           </tbody>
         </Table>
-        <Link to={`/home_estudiante/${studentId}`} style={{
+        <Link to={`/home_profesor/${id}`} style={{
           color: "white",
           textAlign: "center",
           textDecoration: "none",
@@ -167,7 +155,8 @@ const ListarExamenes2 = () => {
           cursor: "pointer",
           display: "block",
           margin: "0 auto 16px",
-          background: "#00796b",
+          background: "#004d40", /* Nuevo tono de verde */
+          borderRadius: "4px"
         }}>
           Regresar
         </Link>
@@ -176,4 +165,4 @@ const ListarExamenes2 = () => {
   );
 };
 
-export default ListarExamenes2;
+export default ListarExamenes;
